@@ -34,19 +34,34 @@ class Validation extends Controller
         return view('result');
     }
 
-    public function sendVote(Request $request){
-        //untuk validasi input yang masuk
-        $validateReq = $request->validate([
+    public function sendVote(Request $request)
+    {
+        $request->validate([
             'candidate_id' => 'required|between:1,3',
             'nis' => 'required',
         ]);
 
-        //
-        $vote = new UserVote();
-        $vote->nis_vote = $request->nis;
-        $vote->vote_number = $request->candidate_id;
-        $vote->save();
-        
-        return;
+        $user = Auth::user();
+        if (!$user || $user->nis != $request->nis || $user->password === null) {
+            return response()->json(['message' => 'Anda tidak memiliki hak akses atau sudah memilih!'], 403);
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $user) {
+            UserVote::create([
+                'nis_vote' => $user->nis,
+                'vote_number' => $request->candidate_id,
+            ]);
+
+            $user->update([
+                'password' => null,
+                'voted_at' => now(),
+            ]);
+        });
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['status' => 'success']);
     }
 }

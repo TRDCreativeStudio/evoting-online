@@ -49,11 +49,6 @@ Route::get('/result', [VoteController::class, 'index'])->name('result');
 // });
 
 Route::get('/thanks', function() {
-    $query = User::where('id', auth()->user()->id)->update(['password' => NULL]);
-    
-    Session::flush();
-    Auth::logout();
-
     return view('thanks');
 })->name('thanks');
 
