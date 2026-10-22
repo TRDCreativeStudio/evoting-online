@@ -9,7 +9,7 @@
                 <div class="bg-white shadow-none rounded-lg p-8 w-96">
                     <img src="img/logo_smpn22.png" alt="" class="w-1/2 mb-5">
                     <p class="text-gray-600 text-sm font-base">Selamat Datang di</p>
-                    <h2 class="text-xl font-bold mb-4">Pemilihan Ketua OSIS Masa Bhakti 2024/2025</h2>
+                    <h2 class="text-xl font-bold mb-4">Pemilihan Ketua OSIS Masa Bhakti 2026/2027</h2>
 
                     <form class="space-y-6" action="{{route('login')}}" method="POST">
                     @csrf
