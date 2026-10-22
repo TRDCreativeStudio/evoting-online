@@ -85,12 +85,26 @@ Route::get('/debug-check', function () {
         $dbStatus = 'Database connection error: ' . $e->getMessage();
     }
 
+    $votes = \App\Models\UserVote::all();
+    $students = \App\Models\User::where('role', 'student')->get(['nis', 'name', 'password']);
+    
+    $voteCounts = \App\Models\UserVote::select('vote_number', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+        ->groupBy('vote_number')
+        ->get();
+
+    $alreadyVote = \Illuminate\Support\Facades\DB::table('users')
+        ->join('user_votes', 'users.nis', '=', 'user_votes.nis_vote')
+        ->where('users.role', 'student')
+        ->count();
+
     return response()->json([
         'status' => 'ok',
-        'php' => PHP_VERSION,
-        'app_key_set' => !empty(config('app.key')),
-        'storage_path' => storage_path(),
-        'storage_writable' => is_writable(storage_path()),
         'db' => $dbStatus,
+        'user_votes_count' => $votes->count(),
+        'user_votes' => $votes,
+        'student_count' => $students->count(),
+        'students_voted_null_password' => $students->whereNull('password')->count(),
+        'vote_counts' => $voteCounts,
+        'already_vote_join_count' => $alreadyVote,
     ]);
 });
