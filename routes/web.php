@@ -65,3 +65,13 @@ Route::get('/loginVote', function() {
 Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
+
+// Helper route to run migrations in serverless environment (Vercel)
+Route::get('/migrate-db', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return '<pre>' . \Illuminate\Support\Facades\Artisan::output() . "\nMigration Successful!</pre>";
+    } catch (\Throwable $e) {
+        return '<pre>Migration Error: ' . $e->getMessage() . '</pre>';
+    }
+});
