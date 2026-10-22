@@ -175,63 +175,91 @@
         </div>
 
         <script>
-            // Candidate 1
-                function confirmFollow1() {
-                    Swal.fire({
-                        title: "Apakah kamu yakin memilih Nayla Qur'ainy Regitha Amalia",
-                        text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yakin!"
-                        }).then( async (result) => {
-                        if (result.isConfirmed) {
-                            await fetch('{{ route('vote') }}', { method: "POST", body: JSON.stringify({ "nis": "{{ \Illuminate\Support\Facades\Auth::user()->nis }}", "candidate_id": 1 , "_token": "{{ csrf_token() }}" }), headers: { "Content-Type": "application/json" } });
-
-                            window.location = "{{ route('thanks') }}";
-                        }
+            async function submitVote(candidateId) {
+                try {
+                    const response = await fetch('{{ route('vote') }}', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            "nis": "{{ \Illuminate\Support\Facades\Auth::user()->nis }}",
+                            "candidate_id": candidateId,
+                            "_token": "{{ csrf_token() }}"
+                        })
                     });
+
+                    if (response.ok) {
+                        window.location = "{{ route('thanks') }}";
+                    } else {
+                        const err = await response.json().catch(() => ({}));
+                        Swal.fire({
+                            icon: "error",
+                            title: "Gagal memilih!",
+                            text: err.message || "Terjadi kesalahan saat menyimpan suara. Silakan coba lagi."
+                        });
                     }
-
-                // Candidate 2
-                function confirmFollow2() {
+                } catch (e) {
                     Swal.fire({
-                        title: "Apakah kamu yakin memilih M. Qoirul Ulum",
-                        text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yakin!"
-                        }).then( async (result) => {
-                        if (result.isConfirmed) {
-                            await fetch('{{ route('vote') }}', { method: "POST", body: JSON.stringify({ "nis": "{{ \Illuminate\Support\Facades\Auth::user()->nis }}", "candidate_id": 2 , "_token": "{{ csrf_token() }}" }), headers: { "Content-Type": "application/json" } });
-
-                            window.location = "{{ route('thanks') }}";
-
-                        }
+                        icon: "error",
+                        title: "Koneksi Error",
+                        text: "Gagal terhubung ke server. Silakan periksa koneksi internet."
                     });
                 }
+            }
 
-                // Candidate 3
-                function confirmFollow3() {
-                    Swal.fire({
-                        title: "Apakah kamu yakin memilih Mikaela Angely Wilson",
-                        text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yakin!"
-                        }).then( async (result) => {
-                        if (result.isConfirmed) {
-                            await fetch('{{ route('vote') }}', { method: "POST", body: JSON.stringify({ "nis": "{{ \Illuminate\Support\Facades\Auth::user()->nis }}", "candidate_id": 3 , "_token": "{{ csrf_token() }}" }), headers: { "Content-Type": "application/json" } });
+            // Candidate 1
+            function confirmFollow1() {
+                Swal.fire({
+                    title: "Apakah kamu yakin memilih Nayla Qur'ainy Regitha Amalia",
+                    text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yakin!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitVote(1);
+                    }
+                });
+            }
 
-                            window.location = "{{ route('thanks') }}";
-                        }
-                    });
-                }
+            // Candidate 2
+            function confirmFollow2() {
+                Swal.fire({
+                    title: "Apakah kamu yakin memilih M. Qoirul Ulum",
+                    text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yakin!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitVote(2);
+                    }
+                });
+            }
+
+            // Candidate 3
+            function confirmFollow3() {
+                Swal.fire({
+                    title: "Apakah kamu yakin memilih Mikaela Angely Wilson",
+                    text: "sebagai ketua OSIS SMPN 22 Malang Masa Bhakti 2024/2025?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yakin!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitVote(3);
+                    }
+                });
+            }
         </script>
     </div>
 @endsection

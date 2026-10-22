@@ -33,6 +33,7 @@ Route::post('/login', [LoginController::class, 'login_aksi'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout_aksi'])->name('logout');
 
 Route::post('/api/vote', [Validation::class, 'sendVote'])->name('vote');
+Route::post('/vote', [Validation::class, 'sendVote']);
 
 // Route::get('/choose', [Validation::class, 'choose'])->name('choose');
 Route::get('/result', [Validation::class, 'result'])->name('result');
