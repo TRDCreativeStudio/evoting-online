@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Validation;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\AdminStudentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
@@ -36,11 +37,21 @@ Route::post('/api/vote', [Validation::class, 'sendVote'])->name('vote');
 Route::post('/vote', [Validation::class, 'sendVote']);
 
 // Route::get('/choose', [Validation::class, 'choose'])->name('choose');
-Route::get('/result', [Validation::class, 'result'])->name('result');
 Route::get('/choose-new', [Validation::class, 'choose'])->name('choose');
 
-// Sending vote number result
+// Sending vote number result (Admin)
 Route::get('/result', [VoteController::class, 'index'])->name('result');
+
+// Admin Student & Voter Management Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/students', [AdminStudentController::class, 'index'])->name('admin.students');
+    Route::post('/students/import', [AdminStudentController::class, 'importCsv'])->name('admin.students.import');
+    Route::get('/students/export', [AdminStudentController::class, 'exportCsv'])->name('admin.students.export');
+    Route::post('/students/reset-votes', [AdminStudentController::class, 'resetVotes'])->name('admin.students.reset_votes');
+    Route::post('/students/delete-all', [AdminStudentController::class, 'deleteAllStudents'])->name('admin.students.delete_all');
+    Route::delete('/students/{id}', [AdminStudentController::class, 'deleteStudent'])->name('admin.students.delete');
+    Route::post('/save-admin', [AdminStudentController::class, 'saveAdmin'])->name('admin.save');
+});
 // Route::get('api/result', [VoteController::class, 'countUsers'])->name('progress');
 
 

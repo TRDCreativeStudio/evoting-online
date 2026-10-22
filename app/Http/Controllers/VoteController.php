@@ -12,6 +12,9 @@ class VoteController extends Controller
     //
     public function index()
     {
+        if (!\Illuminate\Support\Facades\Auth::check() || \Illuminate\Support\Facades\Auth::user()->role !== 'admin') {
+            return redirect()->route('index');
+        }
         // Mengambil jumlah vote berdasarkan vote_number
         // $voteCounts = UserVote::select('vote_number', DB::raw('count(*) as total'))
         //                     ->groupBy('vote_number')
