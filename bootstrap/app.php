@@ -15,7 +15,7 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
-if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
+if (getenv('VERCEL') || isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || !is_writable($app->storagePath())) {
     $app->useStoragePath('/tmp/storage');
 }
 

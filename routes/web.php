@@ -75,3 +75,22 @@ Route::get('/migrate-db', function () {
         return '<pre>Migration Error: ' . $e->getMessage() . '</pre>';
     }
 });
+
+// Diagnostic check route
+Route::get('/debug-check', function () {
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $dbStatus = 'Connected to database: ' . \Illuminate\Support\Facades\DB::connection()->getDatabaseName();
+    } catch (\Throwable $e) {
+        $dbStatus = 'Database connection error: ' . $e->getMessage();
+    }
+
+    return response()->json([
+        'status' => 'ok',
+        'php' => PHP_VERSION,
+        'app_key_set' => !empty(config('app.key')),
+        'storage_path' => storage_path(),
+        'storage_writable' => is_writable(storage_path()),
+        'db' => $dbStatus,
+    ]);
+});
