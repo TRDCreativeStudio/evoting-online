@@ -11,7 +11,7 @@
                             <img src="img/logo_smpn22.png" alt="" class="h-[20px]">
 
                             <h3 class="text-sm font-medium text-center">
-                            Hasil Pemilihan Ketua OSIS 2024/2025
+                            Hasil Pemilihan Ketua OSIS 2026/2027
                             </h3>
 
                             <div class="flex items-center gap-3">

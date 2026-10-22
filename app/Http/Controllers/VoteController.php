@@ -27,9 +27,9 @@ class VoteController extends Controller
 
         //New Logic Vote
         $candidates = [
-            ['name' => 'Nayla Qur\'ainy Regitha Amalia', 'vote_number' => 1],
-            ['name' => 'M. Qoirul Ulum', 'vote_number' => 2],
-            ['name' => 'Mikaela Angely Wilson', 'vote_number' => 3],
+            ['name' => 'Almira Quenna Febri Cahyani', 'vote_number' => 1],
+            ['name' => 'Afifah Ignacea Putri', 'vote_number' => 2],
+            ['name' => 'Talita Naila Zahra', 'vote_number' => 3],
         ];
 
         $voteCounts = UserVote::select('vote_number', DB::raw('count(*) as total'))
