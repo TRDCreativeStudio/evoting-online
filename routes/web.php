@@ -47,6 +47,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/students', [AdminStudentController::class, 'index'])->name('admin.students');
     Route::post('/students/import', [AdminStudentController::class, 'importCsv'])->name('admin.students.import');
     Route::get('/students/export', [AdminStudentController::class, 'exportCsv'])->name('admin.students.export');
+    Route::post('/students/regenerate-tokens', [AdminStudentController::class, 'regenerateTokens'])->name('admin.students.regenerate_tokens');
     Route::post('/students/reset-votes', [AdminStudentController::class, 'resetVotes'])->name('admin.students.reset_votes');
     Route::post('/students/delete-all', [AdminStudentController::class, 'deleteAllStudents'])->name('admin.students.delete_all');
     Route::delete('/students/{id}', [AdminStudentController::class, 'deleteStudent'])->name('admin.students.delete');

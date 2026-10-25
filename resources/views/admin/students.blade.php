@@ -60,7 +60,7 @@
         </div>
 
         <!-- Action Cards Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             <!-- Card 1: Upload CSV -->
             <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between">
@@ -72,7 +72,7 @@
                         <h3 class="font-bold text-gray-800">Upload Data Siswa (CSV)</h3>
                     </div>
                     <p class="text-xs text-gray-500 mb-4">
-                        Format CSV cukup kolom <strong>nis</strong> dan <strong>name</strong> (opsional: <strong>password</strong>). Jika password kosong, sistem otomatis membuat PIN 6-digit.
+                        Format CSV: kolom <strong>nis</strong>, <strong>nama</strong>, dan <strong>kelas</strong> (opsional: jika kelas/password kosong, tidak apa-apa). Sistem otomatis membuat PIN 6-digit jika password kosong.
                     </p>
 
                     <form id="uploadCsvForm" action="{{ route('admin.students.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -104,14 +104,23 @@
                         <h3 class="font-bold text-gray-800">Aksi & Rekap Panitia</h3>
                     </div>
                     <p class="text-xs text-gray-500 mb-4">
-                        Download rekap seluruh token siswa untuk dicetak panitia, atau reset hasil pemilihan untuk gladi bersih berikutnya.
+                        Download rekap seluruh token siswa untuk dicetak panitia, buat token baru untuk gladi bersih/hari H, atau reset suara pemilih.
                     </p>
 
-                    <div class="space-y-3">
+                    <div class="space-y-2.5">
                         <a href="{{ route('admin.students.export') }}" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm shadow-sm transition flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             Download Rekap Token (CSV)
                         </a>
+
+                        <form id="regenerateTokensForm" action="{{ route('admin.students.regenerate_tokens') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="confirm_text" id="regenerateTokensInput">
+                            <button type="button" onclick="confirmRegenerateTokens()" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                Generate Token Baru (Gladi Bersih / Hari H)
+                            </button>
+                        </form>
 
                         <form id="resetVotesForm" action="{{ route('admin.students.reset_votes') }}" method="POST">
                             @csrf
@@ -131,41 +140,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: Kelola Admin Sesuai Occasion -->
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </span>
-                    <h3 class="font-bold text-gray-800">Akun Admin (Occasion)</h3>
-                </div>
-                <p class="text-xs text-gray-500 mb-3">
-                    Ubah NIS, Nama, atau Token Admin saat occasion/acara berganti.
-                </p>
-
-                <form action="{{ route('admin.save') }}" method="POST" class="space-y-2.5">
-                    @csrf
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">NIS Admin</label>
-                        <input type="text" name="nis" value="{{ Auth::user()->nis }}" required
-                            class="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Admin / Panitia</label>
-                        <input type="text" name="name" value="{{ Auth::user()->name }}" required
-                            class="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Token Login Admin Baru</label>
-                        <input type="text" name="token" value="{{ Auth::user()->password_row }}" required
-                            class="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 font-mono">
-                    </div>
-                    <button type="submit" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-xs transition">
-                        Simpan Akun Admin
-                    </button>
-                </form>
-            </div>
-
         </div>
 
         <!-- Daftar Siswa Table -->
@@ -174,7 +148,7 @@
                 <h3 class="font-bold text-gray-800 text-base">Daftar Pemilih Terdaftar</h3>
 
                 <form method="GET" action="{{ route('admin.students') }}" class="flex items-center gap-2">
-                    <input type="text" name="search" value="{{ $search }}" placeholder="Cari NIS atau Nama..."
+                    <input type="text" name="search" value="{{ $search }}" placeholder="Cari NIS, Nama, atau Kelas..."
                         class="px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64">
                     <button type="submit" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium">Cari</button>
                     @if($search)
@@ -189,10 +163,9 @@
                         <tr>
                             <th class="py-3 px-4">NIS</th>
                             <th class="py-3 px-4">Nama Siswa</th>
-                            <th class="py-3 px-4">Role</th>
+                            <th class="py-3 px-4">Kelas</th>
                             <th class="py-3 px-4">Token Login</th>
                             <th class="py-3 px-4">Status Pemilihan</th>
-                            <th class="py-3 px-4 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -200,7 +173,7 @@
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="py-2.5 px-4 font-mono font-medium text-gray-900">{{ $student->nis }}</td>
                                 <td class="py-2.5 px-4 font-medium text-gray-800">{{ $student->name }}</td>
-                                <td class="py-2.5 px-4 text-gray-500">{{ $student->role }}</td>
+                                <td class="py-2.5 px-4 font-medium text-gray-700">{{ $student->kelas ?? '-' }}</td>
                                 <td class="py-2.5 px-4">
                                     <span class="font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-800 font-semibold">{{ $student->password_row }}</span>
                                 </td>
@@ -217,17 +190,10 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-2.5 px-4 text-center">
-                                    <form action="{{ route('admin.students.delete', $student->id) }}" method="POST" onsubmit="return confirm('Hapus siswa {{ $student->name }}?')" class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:text-red-700 font-medium">Hapus</button>
-                                    </form>
-                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="py-8 text-center text-gray-400">
+                                <td colspan="5" class="py-8 text-center text-gray-400">
                                     Belum ada data siswa. Silakan upload file CSV di atas.
                                 </td>
                             </tr>
@@ -297,6 +263,62 @@
                     Swal.showLoading();
                 }
             });
+        });
+    }
+
+    // Regenerate Tokens Confirmation & Loader
+    function confirmRegenerateTokens() {
+        Swal.fire({
+            title: 'Generate Token Baru?',
+            html: `
+                <div class="text-left text-xs text-gray-600 space-y-2 mt-2">
+                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900">
+                        <p class="font-bold flex items-center gap-1.5 mb-1.5 text-xs">
+                            <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            INFORMASI PENTING PERGANTIAN TOKEN:
+                        </p>
+                        <ul class="list-disc list-inside space-y-1 text-[11px] leading-relaxed">
+                            <li>Setiap siswa akan mendapatkan <strong>PIN/Token 6-digit baru yang acak</strong> (berbeda dari sebelumnya).</li>
+                            <li>Token lama otomatis hangus dan tidak dapat digunakan lagi.</li>
+                            <li>Seluruh suara pemilihan yang sudah masuk akan <strong>di-reset (0)</strong> agar siswa bisa memilih kembali (ideal untuk simulasi/gladi bersih & hari H).</li>
+                        </ul>
+                    </div>
+                    <p class="pt-2 text-gray-700 font-medium">Ketik <span class="text-blue-700 font-mono font-bold bg-blue-50 px-1 py-0.5 rounded border border-blue-200">UBAH TOKEN</span> di bawah untuk konfirmasi:</p>
+                </div>
+            `,
+            input: 'text',
+            inputPlaceholder: 'Ketik UBAH TOKEN di sini...',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Generate Token Sekarang',
+            cancelButtonText: 'Batal',
+            preConfirm: (inputValue) => {
+                if (!inputValue || inputValue.trim() !== 'UBAH TOKEN') {
+                    Swal.showValidationMessage('Teks konfirmasi salah! Anda harus mengetik persis "UBAH TOKEN".');
+                    return false;
+                }
+                return inputValue.trim();
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Sedang Membuat Token Baru...',
+                    html: `
+                        <div class="py-2 text-sm text-gray-600">
+                            Men-generate token acak baru dan meng-update kredensial seluruh siswa... Mohon tunggu sebentar.
+                        </div>
+                    `,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                document.getElementById('regenerateTokensInput').value = result.value;
+                document.getElementById('regenerateTokensForm').submit();
+            }
         });
     }
 
